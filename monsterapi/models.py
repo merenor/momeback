@@ -6,10 +6,9 @@ class Melody(models.Model):
     """ TODO: What is actually given by RISM dataset? """
 
     name = models.CharField(max_length=255, blank=True, null=True)
+    mei_data = models.TextField(blank=True, null=True)
     #rism_link = models.URL
-    rism_notes = models.CharField(max_length=255, blank=True, null=True)
     #sound_file =
-    description = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return str(self.name)
@@ -59,6 +58,18 @@ class Book(models.Model):
         return str(self.title)
 
 
+class Name(models.Model):
+    """ Names for little monsters """
+
+    name = models.CharField(max_length=50)
+    gender = models.CharField(max_length=3)
+    attribute = models.CharField(max_length=50)
+
+    def __str__(self):
+        return "{n}, {g} {a}e".format(n = self.name, g = self.gender,
+            a = self.attribute[:1].upper() + self.attribute[1:])
+
+
 class Monster(models.Model):
     """ Our litte monsters """
 
@@ -69,9 +80,10 @@ class Monster(models.Model):
     description = models.TextField(blank=True, null=True)
     bible_passage = models.CharField(max_length=20, blank=True, null=True)
     bible_text = models.TextField(blank=True, null=True)
-    book_id = models.ForeignKey(Book, on_delete=models.CASCADE, blank=True, null=True)
+    book = models.ForeignKey(Book, on_delete=models.CASCADE, blank=True, null=True)
     melody = models.ForeignKey(Melody, on_delete=models.CASCADE, blank=True, null=True)
     motives = models.ManyToManyField(Motive, blank=True)
+    name = models.ForeignKey(Name, on_delete=models.CASCADE, blank=True, null=True)
 
     def __str__(self):
         return str(self.description)

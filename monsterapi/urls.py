@@ -1,7 +1,9 @@
 from django.urls import path
-from .views import ListMonstersView, SingleMonstersView
+#from .views import ListMonstersView, SingleMonstersView
 
 urlpatterns = [
-    path('monsters/all/', ListMonstersView.as_view(), name="monsters-all"),
-    path('monsters/<str:picture_id>/', SingleMonstersView.as_view(), name="single-monster"),
+    #path('monsters/all/', ListMonstersView.as_view(), name="monsters-all"),
+    #path('monsters/<str:picture_id>/', SingleMonstersView.as_view(), name="single-monster"),
+    #path('import/', import_json, name="import_json")
+
 ]

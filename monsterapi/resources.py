@@ -1,11 +1,10 @@
 from import_export import resources
 from import_export.fields import Field
-from .models import Book, Printer, Owner, Monster
+from .models import Book, Printer, Owner, Monster, Name, Melody
 from import_export.widgets import ForeignKeyWidget
 
 
 class BookResource(resources.ModelResource):
-
     book_id = Field(attribute='book_id', column_name='BuchID')
     language = Field(attribute='language', column_name='Sprache')
     title = Field(attribute='title', column_name='Titel')
@@ -48,3 +47,20 @@ class MonsterResource(resources.ModelResource):
 
     class Meta:
         model = Monster
+
+
+class NameResource(resources.ModelResource):
+    name = Field(attribute='name', column_name='name')
+    gender = Field(attribute='gender', column_name='gender')
+    attribute = Field(attribute='attribute', column_name='attribute')
+
+    class Meta:
+        model = Name
+
+
+class MelodyResource(resources.ModelResource):
+    name = Field(attribute='name', column_name='name')
+    mei_data = Field(attribute='mei_data', column_name='mei_data')
+
+    class Meta:
+        model = Melody
