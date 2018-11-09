@@ -75,7 +75,7 @@ class Monster(models.Model):
 
     picture_id = models.CharField(max_length=255, blank=True, null=True)
     file_format = models.CharField(max_length=4, blank=True, null=True)
-    #image = models.ImageField(upload_to='media/monster_pics/', default='media/monster_pics/leo.png', blank=True, null=True)
+    image = models.ImageField(upload_to='media/monster_pics/', default='media/monster_pics/leo.png', blank=True, null=True)
     picture_filename = models.CharField(max_length=255, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     bible_passage = models.CharField(max_length=20, blank=True, null=True)
