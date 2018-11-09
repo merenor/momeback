@@ -49,29 +49,37 @@ class GameView(APIView):
         monster_pos = choice([1, 2, 3])
 
         if monster_pos == 1:
+            data['melody1_id'] = rand_monster.melody.pk
             data['melody1_name'] = rand_monster.melody.name
             data['melody1_mei_data'] = rand_monster.melody.mei_data
 
+            data['melody2_id'] = other_melodies[0].melody.pk
             data['melody2_name'] = other_melodies[0].name
             data['melody2_mei_data'] = other_melodies[0].mei_data
 
+            data['melody3_id'] = other_melodies[1].melody.pk
             data['melody3_name'] = other_melodies[1].name
             data['melody3_mei_data'] = other_melodies[1].mei_data
 
         if monster_pos == 2:
+            data['melody1_id'] = other_melodies[0].melody.pk
             data['melody1_name'] = other_melodies[0].name
             data['melody1_mei_data'] = other_melodies[0].mei_data
 
+            data['melody2_id'] = rand_monster.melody.pk
             data['melody2_name'] = rand_monster.melody.name
             data['melody2_mei_data'] = rand_monster.melody.mei_data
 
+            data['melody3_id'] = other_melodies[1].melody.pk
             data['melody3_name'] = other_melodies[1].name
             data['melody3_mei_data'] = other_melodies[1].mei_data
 
         if monster_pos == 3:
+            data['melody1_id'] = other_melodies[0].melody.pk
             data['melody1_name'] = other_melodies[0].name
             data['melody1_mei_data'] = other_melodies[0].mei_data
 
+            data['melody2_id'] = other_melodies[1].melody.pk
             data['melody2_name'] = other_melodies[1].name
             data['melody2_mei_data'] = other_melodies[1].mei_data
 
@@ -86,6 +94,7 @@ class GameView(APIView):
         data['bible_passage'] = rand_monster.bible_passage
         data['bible_text'] = rand_monster.bible_text
         data['book_title'] = rand_monster.book.title
+        data['name'] = random_monster.str()
 
         return Response(data)
 
