@@ -69,5 +69,7 @@ class CheckMelody(APIView):
 
     def get(self, request, monster_id, melody_id):
         monster = Monster.objects.get(pk=monster_id)
+        if monster.melody == None:
+            return Response({ 'result': 'Monster ist unmusikalisch. :-(' })
 
-        return Response({ 'result': monster.id == melody_id })
+        return Response({ 'result': monster.melody.pk == melody_id })
