@@ -46,7 +46,7 @@ class GameView(APIView):
 
         data['picture_id'] = rand_monster.picture_id
         data['file_format'] = rand_monster.file_format
-        data['picture_filename'] = rand_monster.picture_filename
+        data['picture_filename'] = "http://monsterapi.pythonanywhere.com/" + rand_monster.picture_filename
         data['description'] = rand_monster.description
         data['bible_passage'] = rand_monster.bible_passage
         data['bible_text'] = rand_monster.bible_text
