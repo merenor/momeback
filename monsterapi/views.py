@@ -95,7 +95,7 @@ class GameView(APIView):
         data['bible_passage'] = rand_monster.bible_passage
         data['bible_text'] = rand_monster.bible_text
         data['book_title'] = rand_monster.book.title
-        data['name'] = rand_monster.str()
+        data['name'] = str(rand_monster.name)
 
         return Response(data)
 
