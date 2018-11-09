@@ -40,27 +40,52 @@ class GameView(APIView):
         rand_monster = Monster.objects.get(pk=rand_monster_pk)
 
         # Get three different melodies
-        melody_pks = Melody.objects.values_list('pk', flat=True)
-        rand_melody_pks = sample(list(melody_pks), 3)
-        melodies = [Melody.objects.get(pk=pk) for pk in rand_melody_pks]
+        melody_pks = list(Melody.objects.values_list('pk', flat=True))
+        # remove right monster id to avoid duplicity
+        melody_pks.remove(rand_monster_pk)
+        rand_melody_pks = sample(melody_pks, 2)
+        other_melodies = [Melody.objects.get(pk=pk) for pk in rand_melody_pks]
 
+        monster_pos = choice([1, 2, 3])
+
+        if monster_pos == 1:
+            data['melody1_name'] = rand_monster.melody.name
+            data['melody1_mei_data'] = rand_monster.melody.mei_data
+
+            data['melody2_name'] = other_melodies[0].name
+            data['melody2_mei_data'] = other_melodies[0].mei_data
+
+            data['melody3_name'] = other_melodies[1].name
+            data['melody3_mei_data'] = other_melodies[1].mei_data
+
+        if monster_pos == 2:
+            data['melody1_name'] = other_melodies[0].name
+            data['melody1_mei_data'] = other_melodies[0].mei_data
+
+            data['melody2_name'] = rand_monster.melody.name
+            data['melody2_mei_data'] = rand_monster.melody.mei_data
+
+            data['melody3_name'] = other_melodies[1].name
+            data['melody3_mei_data'] = other_melodies[1].mei_data
+
+        if monster_pos == 3:
+            data['melody1_name'] = other_melodies[0].name
+            data['melody1_mei_data'] = other_melodies[0].mei_data
+
+            data['melody2_name'] = other_melodies[1].name
+            data['melody2_mei_data'] = other_melodies[1].mei_data
+
+            data['melody3_name'] = rand_monster.melody.name
+            data['melody3_mei_data'] = rand_monster.melody.mei_data
+
+        data['id'] = rand_monster.pk
         data['picture_id'] = rand_monster.picture_id
         data['file_format'] = rand_monster.file_format
-        data['picture_filename'] = "http://monsterapi.pythonanywhere.com/media/" + rand_monster.picture_filename
+        data['picture_filename'] = "http://monsterapi.pythonanywhere.com/media/monster_pics/" + rand_monster.picture_filename
         data['description'] = rand_monster.description
         data['bible_passage'] = rand_monster.bible_passage
         data['bible_text'] = rand_monster.bible_text
         data['book_title'] = rand_monster.book.title
-
-        data['melody1_name'] = melodies[0].name
-        data['melody1_mei_data'] = melodies[0].mei_data
-
-        data['melody2_name'] = melodies[1].name
-        data['melody2_mei_data'] = melodies[1].mei_data
-
-        data['melody3_name'] = melodies[2].name
-        data['melody3_mei_data'] = melodies[2].mei_data
-
 
         return Response(data)
 
