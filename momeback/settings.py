@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'k-+#ab9!=54y0h0n*raakdso*od9^cg!lidg-6ufd(nxei^^uk'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['monsterapi.pythonanywhere.com', '127.0.0.1', 'localhost']
 
