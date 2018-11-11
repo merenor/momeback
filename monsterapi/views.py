@@ -66,44 +66,49 @@ class GameView(APIView):
         data['book_title'] = rand_monster.book.title
         data['name'] = str(rand_monster.name)
 
+        data['melodies'] = []
+
         if monster_pos == 1:
-            data['melody1_id'] = rand_monster.melody.pk
-            data['melody1_name'] = rand_monster.melody.name
-            data['melody1_mei_data'] = rand_monster.melody.mei_data
-
-            data['melody2_id'] = other_melodies[0].pk
-            data['melody2_name'] = other_melodies[0].name
-            data['melody2_mei_data'] = other_melodies[0].mei_data
-
-            data['melody3_id'] = other_melodies[1].pk
-            data['melody3_name'] = other_melodies[1].name
-            data['melody3_mei_data'] = other_melodies[1].mei_data
+            data['melodies'].append({
+                'id': rand_monster.melody.pk,
+                'name': rand_monster.melody.name,
+                'mei_data': rand_monster.melody.mei_data })
+            data['melodies'].append({
+                'id': other_melodies[0].pk,
+                'name': other_melodies[0].name,
+                'mei_data': other_melodies[0].mei_data })
+            data['melodies'].append({
+                'id': other_melodies[1].pk,
+                'name': other_melodies[1].name,
+                'mei_data': other_melodies[1].mei_data })
 
         if monster_pos == 2:
-            data['melody1_id'] = other_melodies[0].pk
-            data['melody1_name'] = other_melodies[0].name
-            data['melody1_mei_data'] = other_melodies[0].mei_data
-
-            data['melody2_id'] = rand_monster.melody.pk
-            data['melody2_name'] = rand_monster.melody.name
-            data['melody2_mei_data'] = rand_monster.melody.mei_data
-
-            data['melody3_id'] = other_melodies[1].pk
-            data['melody3_name'] = other_melodies[1].name
-            data['melody3_mei_data'] = other_melodies[1].mei_data
+            data['melodies'].append({
+                'id': other_melodies[0].pk,
+                'name': other_melodies[0].name,
+                'mei_data': other_melodies[0].mei_data })
+            data['melodies'].append({
+                'id': rand_monster.melody.pk,
+                'name': rand_monster.melody.name,
+                'mei_data': rand_monster.melody.mei_data })
+            data['melodies'].append({
+                'id': other_melodies[1].pk,
+                'name': other_melodies[1].name,
+                'mei_data': other_melodies[1].mei_data })
 
         if monster_pos == 3:
-            data['melody1_id'] = other_melodies[0].pk
-            data['melody1_name'] = other_melodies[0].name
-            data['melody1_mei_data'] = other_melodies[0].mei_data
-
-            data['melody2_id'] = other_melodies[1].pk
-            data['melody2_name'] = other_melodies[1].name
-            data['melody2_mei_data'] = other_melodies[1].mei_data
-
-            data['melody3_id'] = rand_monster.melody.pk
-            data['melody3_name'] = rand_monster.melody.name
-            data['melody3_mei_data'] = rand_monster.melody.mei_data
+            data['melodies'].append({
+                'id': other_melodies[0].pk,
+                'name': other_melodies[0].name,
+                'mei_data': other_melodies[0].mei_data })
+            data['melodies'].append({
+                'id': other_melodies[1].pk,
+                'name': other_melodies[1].name,
+                'mei_data': other_melodies[1].mei_data })
+            data['melodies'].append({
+                'id': rand_monster.melody.pk,
+                'name': rand_monster.melody.name,
+                'mei_data': rand_monster.melody.mei_data })
 
         return Response(data)
 
