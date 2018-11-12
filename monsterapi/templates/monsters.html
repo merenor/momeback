@@ -6,16 +6,42 @@
 
     <!-- bootstrap importieren -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<style>
+
+  @media (min-width:576px) {
+      .card-columns {
+        column-count: 2;
+      }
+  }
+    @media (min-width:768px) {
+      .card-columns {
+        column-count: 3;
+      }
+  }
+  @media (min-width:992px) {
+      .card-columns {
+        column-count: 4;
+      }
+  }
+  @media (min-width:1200px) {
+      .card-columns {
+        column-count: 6;
+      }
+  }
+</style>
+
   </head>
-  <body style="background-color: #F5F5DC">
-    <h1 style="margin: 1em;">Alle Monster sind schon da ...</h1>
+  <body style="margin: 2em; background-color: #F5F5DC">
     <div class="container-fluid">
+    <h1>Alle Monster sind schon da ...</h1>
       <!-- Mit bootstrap cards lösen -->
       <div class="row">
         {% for monster in monsters %}
-        <div class="col">
-          <div class="card" style="width: 18rem; height: 550px; margin: 1em;">
+        <div class="col-6 col-sm-4 col-md-3 p-2">
+          <div class="card h-100">
+            <div img="card-header">
             <img class="card-img-top" src="http://monsterapi.pythonanywhere.com/media/monster_pics/{{ monster.picture_filename }}" alt="Card image cap">
+          </div>
             <div class="card-body">
               <h5 class="card-title">{{ monster.name }}</h5>
               <p class="card-text"><strong>Ilustration für:</strong> {{ monster.bible_passage }}<br />
@@ -23,10 +49,12 @@
                 <strong>aus:</strong> {{ monster.book.title }}</p>
             </div>
           </div>
-        </div>
-        {% endfor %}
       </div>
-
+      {% endfor %}
+</div>
     </div>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
   </body>
 </html>
