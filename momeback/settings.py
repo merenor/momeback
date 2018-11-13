@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'k-+#ab9!=54y0h0n*raakdso*od9^cg!lidg-6ufd(nxei^^uk'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['monsterapi.pythonanywhere.com', '127.0.0.1', 'localhost']
 
@@ -40,9 +40,11 @@ INSTALLED_APPS = [
     'monsterapi',
     'rest_framework',
     'import_export',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -128,3 +130,11 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
+
+# The CORS Thing
+CORS_ORIGIN_ALLOW_ALL = True
+
+#CORS_ORIGIN_WHITELIST = (
+#    'monsterapi.pythonanywhere.com',
+#    'localhost',
+#)
