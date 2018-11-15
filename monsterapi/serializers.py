@@ -57,7 +57,7 @@ class BookSerializer(ModelSerializer):
 class MelodySerializer(ModelSerializer):
     class Meta:
         model = Melody
-        fields = ("name", "mei_data")
+        fields = ("title", "gwv", "clef", "timesig", "keysig", "pae_data", "mei_data")
 
 
 class MonsterSerializer(ModelSerializer):

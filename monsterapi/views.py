@@ -7,7 +7,7 @@ from rest_framework_extensions.mixins import NestedViewSetMixin
 
 from django.shortcuts import render
 
-from random import choice, sample
+from random import choice, sample, shuffle
 import json
 from collections import OrderedDict
 
@@ -52,10 +52,6 @@ class GameView(APIView):
         rand_melody_pks = sample(melody_pks, 2)
         other_melodies = [Melody.objects.get(pk=pk) for pk in rand_melody_pks]
 
-        # For the output of melody1, melody2 and melody3,
-        # choose the place for the right answer
-        monster_pos = choice([1, 2, 3])
-
         data['id'] = rand_monster.pk
         data['picture_id'] = rand_monster.picture_id
         data['file_format'] = rand_monster.file_format
@@ -66,49 +62,13 @@ class GameView(APIView):
         data['book_title'] = rand_monster.book.title
         data['name'] = str(rand_monster.name)
 
-        data['melodies'] = []
+        melodies = [MelodySerializer(rand_monster.melody).data,
+            MelodySerializer(other_melodies[0]).data,
+            MelodySerializer(other_melodies[1]).data]
 
-        if monster_pos == 1:
-            data['melodies'].append({
-                'id': rand_monster.melody.pk,
-                'name': rand_monster.melody.name,
-                'mei_data': rand_monster.melody.mei_data })
-            data['melodies'].append({
-                'id': other_melodies[0].pk,
-                'name': other_melodies[0].name,
-                'mei_data': other_melodies[0].mei_data })
-            data['melodies'].append({
-                'id': other_melodies[1].pk,
-                'name': other_melodies[1].name,
-                'mei_data': other_melodies[1].mei_data })
+        shuffle(melodies)
 
-        if monster_pos == 2:
-            data['melodies'].append({
-                'id': other_melodies[0].pk,
-                'name': other_melodies[0].name,
-                'mei_data': other_melodies[0].mei_data })
-            data['melodies'].append({
-                'id': rand_monster.melody.pk,
-                'name': rand_monster.melody.name,
-                'mei_data': rand_monster.melody.mei_data })
-            data['melodies'].append({
-                'id': other_melodies[1].pk,
-                'name': other_melodies[1].name,
-                'mei_data': other_melodies[1].mei_data })
-
-        if monster_pos == 3:
-            data['melodies'].append({
-                'id': other_melodies[0].pk,
-                'name': other_melodies[0].name,
-                'mei_data': other_melodies[0].mei_data })
-            data['melodies'].append({
-                'id': other_melodies[1].pk,
-                'name': other_melodies[1].name,
-                'mei_data': other_melodies[1].mei_data })
-            data['melodies'].append({
-                'id': rand_monster.melody.pk,
-                'name': rand_monster.melody.name,
-                'mei_data': rand_monster.melody.mei_data })
+        data['melodies'] = melodies
 
         return Response(data)
 

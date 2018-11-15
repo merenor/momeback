@@ -1,0 +1,21 @@
+[
+  {
+    "id": 2,
+    "BuchID": "TestBuch",
+    "Sprache": "Deutsch",
+    "Titel": "Testbuch",
+    "Werk": "Testbüchlein",
+    "Erscheinungsort": "Nürnberg",
+    "Drucker": {
+      "Name": "Felix Werthschulte",
+      "GndID": "http://d-nb.info/gnd/9999999999"
+    },
+    "Erscheinungsjahr": "1483",
+    "DnbID": "http://d-nb.info/1048164535",
+    "Besitzer": {
+      "Bibliothek": "Martinus-Bibliothek",
+      "Ort": "Mainz",
+      "Signatur": "Inc 100"
+    }
+  }
+]

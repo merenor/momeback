@@ -5,13 +5,19 @@ class Melody(models.Model):
     """ Melodies by Graupner """
     """ TODO: What is actually given by RISM dataset? """
 
-    name = models.CharField(max_length=255, blank=True, null=True)
+    title = models.CharField(max_length=255, blank=True, null=True)
+    gwv = models.CharField(max_length=7, blank=True, null=True)
+    instrument = models.CharField(max_length=255, blank=True, null=True)
+    clef = models.CharField(max_length=3, blank=True, null=True)
+    keysig = models.CharField(max_length=3, blank=True, null=True)
+    timesig = models.CharField(max_length=1, blank=True, null=True)
+    pae_data = models.TextField(blank=True, null=True)
     mei_data = models.TextField(blank=True, null=True)
     #rism_link = models.URL
     #sound_file =
 
     def __str__(self):
-        return str(self.name)
+        return str(self.title)
 
 
 class Printer(models.Model):
@@ -49,7 +55,7 @@ class Book(models.Model):
     title = models.CharField(max_length=255, blank=True, null=True)
     work = models.CharField(max_length=255, blank=True, null=True)
     place_of_publication = models.CharField(max_length=255, blank=True, null=True)
-    printer = models.ForeignKey(Printer, on_delete=models.CASCADE, blank=True, null=True)
+    printer_id = models.ForeignKey(Printer, on_delete=models.CASCADE, blank=True, null=True)
     year = models.CharField(max_length=4, blank=True, null=True)
     dnb_id = models.URLField(max_length=100, blank=True, null=True)
     owner = models.ForeignKey(Owner, on_delete=models.CASCADE, blank=True, null=True)
