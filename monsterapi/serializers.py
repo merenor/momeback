@@ -57,12 +57,14 @@ class BookSerializer(ModelSerializer):
 class MelodySerializer(ModelSerializer):
     class Meta:
         model = Melody
-        fields = ("title", "gwv", "clef", "timesig", "keysig", "pae_data", "mei_data")
+        fields = ("id", "title", "gwv", "clef", "timesig", "keysig",
+            "pae_data", "mei_data")
 
 
 class MonsterSerializer(ModelSerializer):
 
     class Meta:
         model = Monster
-        fields = ("picture_id", "file_format", "picture_filename", "description",
-        "bible_passage", "bible_text", "book_id", "melody", "motives",)
+        fields = ("id", "picture_id", "file_format", "picture_filename",
+            "description", "bible_passage", "bible_text", "book_id", "melody",
+            "motives",)
