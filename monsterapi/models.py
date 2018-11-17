@@ -1,9 +1,12 @@
 from django.db import models
+from random import choice
 
 # Create your models here.
 class Melody(models.Model):
     """ Melodies by Graupner """
     """ TODO: What is actually given by RISM dataset? """
+    class Meta:
+        verbose_name_plural = "melodies"
 
     title = models.CharField(max_length=255, blank=True, null=True)
     gwv = models.CharField(max_length=7, blank=True, null=True)
@@ -66,14 +69,24 @@ class Book(models.Model):
 
 class Name(models.Model):
     """ Names for little monsters """
+    class Meta:
+        ordering = ['gender', 'name', 'attribute']
 
     name = models.CharField(max_length=50)
     gender = models.CharField(max_length=3)
     attribute = models.CharField(max_length=50)
 
     def __str__(self):
-        return "{n}, {g} {a}e".format(n = self.name, g = self.gender,
-            a = self.attribute[:1].upper() + self.attribute[1:])
+        # creates german noun from an adjective
+        # i.e. "grausam" -> "Grausame", but also "feige" -> "Feige"
+        the_attribute = self.attribute[:1].upper() + self.attribute[1:]
+        if not self.attribute.endswith('e'):
+            the_attribute += 'e'
+
+        return "{name}, {gender} {attribute}".format(
+            name=self.name,
+            gender=self.gender,
+            attribute=the_attribute)
 
 
 class Monster(models.Model):
@@ -90,6 +103,18 @@ class Monster(models.Model):
     melody = models.ForeignKey(Melody, on_delete=models.CASCADE, blank=True, null=True)
     motives = models.ManyToManyField(Motive, blank=True)
     name = models.ForeignKey(Name, on_delete=models.CASCADE, blank=True, null=True)
+
+    def save(self, *args, **kwargs):
+
+        # Generate a name for this monster
+        if not self.name:
+            name_pks = Name.objects.values_list('pk', flat=True)
+            rand_name_pk = choice(list(name_pks))
+            self.name = Name.objects.get(pk=rand_name_pk)
+            print("CREATE MONSTER NAME!")
+
+        super().save(*args, **kwargs)
+
 
     def __str__(self):
         return str(self.description)

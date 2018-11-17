@@ -11,19 +11,32 @@ class BookResource(resources.ModelResource):
     title = Field(attribute='title', column_name='Titel')
     work = Field(attribute='work', column_name='Werk')
     place_of_publication = Field(attribute='place_of_publication', column_name='Erscheinungsort')
-    printer_id = Field(attribute='printer_id', column_name='Drucker', widget=ForeignKeyWidget(Printer))
     year = Field(attribute='year', column_name='Erscheinungsjahr')
     dnb_id = Field(attribute='dnb_id', column_name='DnbID')
-    #owner = Field(attribute='owner', column_name='Besitzer', widget=ForeignKeyWidget(Owner, 'library'))
+
+    # nested stuff
+    printer_id = Field(attribute='printer_id', column_name='Drucker', widget=ForeignKeyWidget(Printer))
+    owner = Field(attribute='owner', column_name='Besitzer', widget=ForeignKeyWidget(Owner))
 
     class Meta:
         model = Book
 
     def before_import_row(self, row, **kwargs):
+
+        # check data for printer
         printer_data = row.get('Drucker')
-        (printer, _created) = Printer.objects.get_or_create(name=printer_data['Name'],
+        (printer, _created) = Printer.objects.get_or_create(
+            name=printer_data['Name'],
             gnd_id=printer_data['GndID'])
         row['Drucker'] = printer.id
+
+        # check data for owner
+        owner_data = row.get('Besitzer')
+        (owner, _created) = Owner.objects.get_or_create(
+            library=owner_data['Bibliothek'],
+            location=owner_data['Ort'],
+            signature=owner_data['Signatur'])
+        row['Besitzer'] = owner.id
 
 
 class PrinterResource(resources.ModelResource):
