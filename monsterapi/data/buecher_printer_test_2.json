@@ -3,19 +3,19 @@
     "id": 3,
     "BuchID": "TestBuch2",
     "Sprache": "Deutsch",
-    "Titel": "Testbuch",
-    "Werk": "Testbüchlein",
-    "Erscheinungsort": "Nürnberg",
+    "Titel": "Testbuch 2",
+    "Werk": "Testbüchlein 2",
+    "Erscheinungsort": "Mainz",
     "Drucker": {
-      "Name": "Felix Werthschulte",
+      "Name": "Anett",
       "GndID": "http://d-nb.info/gnd/9999999999"
     },
-    "Erscheinungsjahr": "1483",
+    "Erscheinungsjahr": "2018",
     "DnbID": "http://d-nb.info/1048164535",
     "Besitzer": {
-      "Bibliothek": "Martinus-Bibliothek",
+      "Bibliothek": "Coding da Vinci",
       "Ort": "Mainz",
-      "Signatur": "Inc 100"
+      "Signatur": "Cdv 100"
     }
   }
 ]

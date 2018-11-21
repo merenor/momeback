@@ -45,15 +45,15 @@ class GameView(APIView):
         # Get a list of all melody primary keys
         melody_pks = list(Melody.objects.values_list('pk', flat=True))
 
-        # Remove the pk of the selected monster from  to avoid duplicity
-        melody_pks.remove(rand_monster_pk)
+        # Remove the pk of the selected monster's melody from melody list to avoid duplicity
+        melody_pks.remove(rand_monster.melody.pk)
 
-        # Get two random melodies
+        # Get two random sample melodies
         rand_melody_pks = sample(melody_pks, 2)
         other_melodies = [Melody.objects.get(pk=pk) for pk in rand_melody_pks]
 
         data['id'] = rand_monster.pk
-        data['picture_id'] = rand_monster.picture_id
+        data['picture_slug'] = rand_monster.picture_slug
         data['file_format'] = rand_monster.file_format
         data['picture_filename'] = "http://monsterapi.pythonanywhere.com/media/monster_pics/" + rand_monster.picture_filename
         data['description'] = rand_monster.description

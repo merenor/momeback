@@ -4,23 +4,23 @@ from random import choice
 # Create your models here.
 class Melody(models.Model):
     """ Melodies by Graupner """
-    """ TODO: What is actually given by RISM dataset? """
+
     class Meta:
         verbose_name_plural = "melodies"
 
-    title = models.CharField(max_length=255, blank=True, null=True)
-    gwv = models.CharField(max_length=7, blank=True, null=True)
-    instrument = models.CharField(max_length=255, blank=True, null=True)
-    clef = models.CharField(max_length=3, blank=True, null=True)
-    keysig = models.CharField(max_length=3, blank=True, null=True)
-    timesig = models.CharField(max_length=1, blank=True, null=True)
+    work_title = models.CharField(max_length=100, blank=True, null=True)
+    movement = models.CharField(max_length=100, blank=True, null=True)
+    clef = models.CharField(max_length=10, blank=True, null=True)
+    keysig = models.CharField(max_length=10, blank=True, null=True)
+    timesig = models.CharField(max_length=10, blank=True, null=True)
     pae_data = models.TextField(blank=True, null=True)
-    mei_data = models.TextField(blank=True, null=True)
-    #rism_link = models.URL
-    #sound_file =
+    rism_id = models.PositiveIntegerField(blank=True, null=True)
+    rism_opac_link = models.CharField(max_length=255, blank=True, null=True)
+    tu_da_link = models.CharField(max_length=255, blank=True, null=True)
+
 
     def __str__(self):
-        return str(self.title)
+        return str('{t} - {m}'.format(t=self.work_title, m=self.movement))
 
 
 class Printer(models.Model):
@@ -41,7 +41,10 @@ class Owner(models.Model):
     signature = models.CharField(max_length=255, blank=True, null=True)
 
     def __str__(self):
-        return str(self.name)
+        return "{lib}, {loc} ({sig})".format(
+            lib=self.library,
+            loc=self.location,
+            sig=self.signature)
 
 
 class Motive(models.Model):
@@ -53,18 +56,21 @@ class Motive(models.Model):
 class Book(models.Model):
     """ Bibles """
 
-    book_id = models.CharField(max_length=255, blank=True, null=True)
-    language = models.CharField(max_length=255, blank=True, null=True)
+    book_slug = models.CharField(max_length=255, blank=True, null=True)
     title = models.CharField(max_length=255, blank=True, null=True)
+    language = models.CharField(max_length=255, blank=True, null=True)
     work = models.CharField(max_length=255, blank=True, null=True)
     place_of_publication = models.CharField(max_length=255, blank=True, null=True)
-    printer_id = models.ForeignKey(Printer, on_delete=models.CASCADE, blank=True, null=True)
     year = models.CharField(max_length=4, blank=True, null=True)
-    dnb_id = models.URLField(max_length=100, blank=True, null=True)
+    printer = models.ForeignKey(Printer, on_delete=models.CASCADE, blank=True, null=True)
     owner = models.ForeignKey(Owner, on_delete=models.CASCADE, blank=True, null=True)
+    dnb_id = models.URLField(max_length=100, blank=True, null=True)
 
     def __str__(self):
-        return str(self.title)
+        return "{t} ({p} {y})".format(
+            t=self.title,
+            p=self.place_of_publication,
+            y=self.year)
 
 
 class Name(models.Model):
@@ -92,29 +98,43 @@ class Name(models.Model):
 class Monster(models.Model):
     """ Our litte monsters """
 
-    picture_id = models.CharField(max_length=255, blank=True, null=True)
-    file_format = models.CharField(max_length=4, blank=True, null=True)
-    image = models.ImageField(upload_to='media/monster_pics/', default='media/monster_pics/leo.png', blank=True, null=True)
+    class Meta:
+        ordering = ['name']
+
+    picture_slug = models.CharField(max_length=255, blank=True, null=True)
     picture_filename = models.CharField(max_length=255, blank=True, null=True)
+    file_format = models.CharField(max_length=4, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     bible_passage = models.CharField(max_length=20, blank=True, null=True)
     bible_text = models.TextField(blank=True, null=True)
-    book = models.ForeignKey(Book, on_delete=models.CASCADE, blank=True, null=True)
-    melody = models.ForeignKey(Melody, on_delete=models.CASCADE, blank=True, null=True)
-    motives = models.ManyToManyField(Motive, blank=True)
-    name = models.ForeignKey(Name, on_delete=models.CASCADE, blank=True, null=True)
+    book = models.ForeignKey(Book, related_name='monsters',
+        on_delete=models.CASCADE, blank=True, null=True)
+    melody = models.ForeignKey(Melody, on_delete=models.CASCADE, blank=True,
+        null=True)
+    # not implemented yet
+    # motives = models.ManyToManyField(Motive, blank=True)
+    # not implemented yet - image has to be added manually in Django admin :(
+    # image = models.ImageField(upload_to='media/monster_pics/',
+    #    default='media/monster_pics/leo.png', blank=True, null=True)
+    name = models.ForeignKey(Name, on_delete=models.CASCADE, blank=True,
+    null=True)
 
     def save(self, *args, **kwargs):
 
-        # Generate a name for this monster
+        # Generate a random name for this monster
         if not self.name:
             name_pks = Name.objects.values_list('pk', flat=True)
             rand_name_pk = choice(list(name_pks))
             self.name = Name.objects.get(pk=rand_name_pk)
-            print("CREATE MONSTER NAME!")
+
+        # generate a custom melody
+        if not self.melody:
+            melody_pks = Melody.objects.values_list('pk', flat=True)
+            rand_melody_pk = choice(list(melody_pks))
+            self.melody = Melody.objects.get(pk=rand_melody_pk)
 
         super().save(*args, **kwargs)
 
 
     def __str__(self):
-        return str(self.description)
+        return "{n} [{d}]".format(n=self.name, d=self.description)

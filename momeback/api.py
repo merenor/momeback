@@ -20,10 +20,4 @@ books_router.register(
 printers_router = router.register('printers', PrinterViewSet)
 monsters_router = router.register('monsters', MonsterViewSet)
 melodies_router = router.register('melodies', MelodyViewSet)
-
-#router = DefaultRouter()
-
-#router.register('printers', PrinterViewSet)
-#router.register('owner', OwnerViewSet)
-#router.register('books', BookViewSet)
-#router.register('monsters', MonsterViewSet)
+owners_router = router.register('owners', OwnerViewSet)
