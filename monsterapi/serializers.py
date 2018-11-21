@@ -39,5 +39,4 @@ class MonsterSerializer(ModelSerializer):
     class Meta:
         model = Monster
         fields = ("id", "picture_slug", "file_format", "picture_filename",
-            "description", "bible_passage", "bible_text", "book", "melody",
-            "motives",)
+            "description", "bible_passage", "bible_text", "book", "melody",)
