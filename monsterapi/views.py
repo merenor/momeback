@@ -11,6 +11,7 @@ from django.shortcuts import render
 from random import choice, sample, shuffle
 import json
 from collections import OrderedDict
+import datetime
 
 class PrinterViewSet(NestedViewSetMixin, ModelViewSet):
     serializer_class = PrinterSerializer
@@ -35,12 +36,22 @@ class MelodyViewSet(NestedViewSetMixin, ModelViewSet):
 class GameView(APIView):
 
     def get(self, request, format=None):
+        EASTER_EGG_PK = 666
+
         # dataset for the response
         data = OrderedDict()
 
-        # Get a random monster data set
-        monster_pks = Monster.objects.values_list('pk', flat=True)
-        rand_monster_pk = choice(list(monster_pks))
+        # monstrous Easter Egg ;-)
+        now = datetime.datetime.now()
+        if now.second in [6, 16, 26, 36, 46, 56] or now.microseconds == 666:
+            rand_monster_pk = 666
+        else:
+            # Get a random monster data set
+            monster_pks = list(Monster.objects.values_list('pk', flat=True))
+            # remove Easter Egg from list
+            monster_pks.remove(EASTER_EGG_PK)
+            rand_monster_pk = choice(monster_pks)
+
         rand_monster = Monster.objects.get(pk=rand_monster_pk)
 
         # Get a list of all melody primary keys
