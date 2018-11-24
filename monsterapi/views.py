@@ -1,5 +1,6 @@
-from .models import Monster, Printer, Owner, Book, Melody
-from .serializers import MonsterSerializer, PrinterSerializer, OwnerSerializer, BookSerializer, MelodySerializer
+from .models import Monster, Printer, Owner, Book, Melody, Game, Check
+from .serializers import (MonsterSerializer, PrinterSerializer, OwnerSerializer,
+    BookSerializer, MelodySerializer)
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -70,18 +71,53 @@ class GameView(APIView):
 
         data['melodies'] = melodies
 
+        # save this game to database
+        game = Game(monster=rand_monster,
+            melody1=rand_monster.melody,
+            melody2=other_melodies[0],
+            melody3=other_melodies[1])
+        game.save()
+
+        data['game_id'] = game.id
+
         return Response(data)
 
 
-class CheckMelody(APIView):
+class CheckMonster(APIView):
+    """ Simple check function
+        Parameters: int:monster_id/int:game_id """
 
     def get(self, request, monster_id, melody_id):
-        monster = Monster.objects.get(pk=monster_id)
-        if monster.melody == None:
-            return Response({ 'result': 'Monster ist unmusikalisch. :-(' })
+        monster = Monster.objects.filter(pk=monster_id).first()
 
         return Response({ 'result': monster.melody.pk == melody_id })
+
+
+class CheckGame(APIView):
+    """ Check if a certain melody fits to a certain monster.<br />
+        Parameters: int:game_id/int:game_id<br />
+        Results: true or false (this also if there was any error) """
+
+    def get(self, request, game_id, melody_id):
+        game = Game.objects.filter(id=game_id).first()
+        monster = game.monster if game else None
+        melody = Melody.objects.filter(id=melody_id).first()
+
+        if monster and melody:
+            result = (monster.melody == melody)
+        else:
+            result = False
+
+        check = Check(game=game, monster=monster, melody=melody, result=result)
+        check.save()
+        print("\nGame:", check.game, "\nMonster:", check.monster,
+            "\nMelodie:", check.melody, "\nResult:", check.result)
+
+        return Response({'result': result})
 
 def AllMonsters(request):
     monsters = Monster.objects.all()
     return render(request, 'monsters.html', {'monsters': monsters})
+
+def Welcome(request):
+    return render(request, 'welcome.html')

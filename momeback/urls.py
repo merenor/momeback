@@ -17,13 +17,18 @@ from django.contrib import admin
 from django.urls import path, re_path, include
 #from monsterapi import views as apiviews
 from .api import router
-from monsterapi.views import GameView, CheckMelody, AllMonsters
+from monsterapi.views import (GameView, CheckMonster, CheckGame, AllMonsters,
+    Welcome)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('detail/', include(router.urls)),
     path('game/', GameView.as_view()),
-    path('checkmonster/<int:monster_id>/<int:melody_id>/', CheckMelody.as_view()),
-    path('view/allmonsters', AllMonsters)
+    path('checkmonster/<int:monster_id>/<int:melody_id>/',
+        CheckMonster.as_view()),
+    path('checkgame/<int:game_id>/<int:melody_id>/',
+        CheckGame.as_view()),
+    path('view/allmonsters', AllMonsters),
+    path('', Welcome)
 ]

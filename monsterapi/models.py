@@ -1,5 +1,6 @@
 from django.db import models
 from random import choice
+from django.utils import timezone
 
 # Create your models here.
 class Melody(models.Model):
@@ -20,7 +21,8 @@ class Melody(models.Model):
 
 
     def __str__(self):
-        return str('{t} - {m}'.format(t=self.work_title, m=self.movement))
+        return str('[{i}] {t} - {m}'.format(i=self.id, t=self.work_title,
+            m=self.movement))
 
 
 class Printer(models.Model):
@@ -138,3 +140,39 @@ class Monster(models.Model):
 
     def __str__(self):
         return "{n} [{d}]".format(n=self.name, d=self.description)
+
+
+class Game(models.Model):
+    monster = models.ForeignKey(Monster, on_delete=models.CASCADE, blank=True,
+        null=True)
+    melody1 = models.ForeignKey(Melody, related_name='melody1',
+        on_delete=models.CASCADE, blank=True, null=True)
+    melody2 = models.ForeignKey(Melody, related_name='melody2',
+        on_delete=models.CASCADE, blank=True, null=True)
+    melody3 = models.ForeignKey(Melody, related_name='melody3',
+        on_delete=models.CASCADE, blank=True, null=True)
+    created_date = models.DateTimeField(default=timezone.now)
+
+
+    def __str__(self):
+        return "{:%d.%m.%y, %H:%M:%S} | {}".format(
+            self.created_date,
+            self.monster.name)
+
+
+class Check(models.Model):
+    game = models.ForeignKey(Game, on_delete=models.CASCADE, blank=True,
+        null=True)
+    monster = models.ForeignKey(Monster, on_delete=models.CASCADE, blank=True,
+        null=True)
+    melody = models.ForeignKey(Melody, on_delete=models.CASCADE, blank=True,
+        null=True)
+    result = models.BooleanField(default=None)
+    created_date = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return "{:%d.%m.%y, %H:%M:%S} | {mon} + {mel} = {res}".format(
+            self.created_date,
+            mon=self.monster.name if self.monster else "?",
+            mel=self.melody.work_title if self.melody else "?",
+            res="✓" if self.result else "X")

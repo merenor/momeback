@@ -1,0 +1,21 @@
+[
+  {
+    "id": 666,
+    "BuchID": "WunderseltsameGeschichten",
+    "Sprache": "Deutsch",
+    "Titel": "Wunderseltsame und abenteuerliche Geschichten und Thaten der sieben Schwaben : und wie sie gegen ein grausames Unthier, das in dem großen Wald am Bodensee gehauset und Land und Leuten viel Abbruch gethan, mannlich und sieghaft ausgefahren sind",
+    "Werk": "Buch",
+    "Erscheinungsort": "Düsseldorf",
+    "Drucker": {
+      "Name": "Arnz",
+      "GndID": "http://d-nb.info"
+    },
+    "Erscheinungsjahr": "1856",
+    "DnbID": "http://d-nb.info",
+    "Besitzer": {
+      "Bibliothek": "UB Uni Düsseldorf",
+      "Ort": "Düsseldorf",
+      "Signatur": "unbekannt"
+    }
+  }
+]

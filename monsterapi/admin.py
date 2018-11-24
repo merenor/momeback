@@ -1,6 +1,6 @@
 from django.contrib import admin
 from import_export.admin import ImportExportModelAdmin
-from .models import Book, Printer, Owner, Monster, Name, Melody
+from .models import Book, Printer, Owner, Monster, Name, Melody, Game, Check
 from .resources import BookResource, PrinterResource, OwnerResource, MonsterResource, NameResource, MelodyResource
 
 @admin.register(Book)
@@ -28,3 +28,5 @@ class MelodyAdmin(ImportExportModelAdmin):
     resource_class = MelodyResource
 
 # Register your models here.
+admin.site.register(Game)
+admin.site.register(Check)
