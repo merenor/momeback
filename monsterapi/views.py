@@ -43,8 +43,8 @@ class GameView(APIView):
 
         # monstrous Easter Egg ;-)
         now = datetime.datetime.now()
-        if now.second in [6, 16, 26, 36, 46, 56] or now.microseconds == 666:
-            rand_monster_pk = 666
+        if now.second in [6, 16, 26, 36, 46, 56]:
+            rand_monster_pk = EASTER_EGG_PK
         else:
             # Get a random monster data set
             monster_pks = list(Monster.objects.values_list('pk', flat=True))
