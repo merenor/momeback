@@ -10,6 +10,7 @@ class BookResource(resources.ModelResource):
     language = Field(attribute='language', column_name='Sprache')
     title = Field(attribute='title', column_name='Titel')
     work = Field(attribute='work', column_name='Werk')
+    volume = Field(attribute='volume', column_name='Band')
     place_of_publication = Field(attribute='place_of_publication', column_name='Erscheinungsort')
     year = Field(attribute='year', column_name='Erscheinungsjahr')
     dnb_id = Field(attribute='dnb_id', column_name='DnbID')

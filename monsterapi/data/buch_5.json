@@ -1,0 +1,19 @@
+[{
+  "id": 5,
+  "BuchID": "MbBuch00005",
+  "Sprache": "Deutsch",
+  "Titel": "Biblia, beider Allt vnnd Newen Testamenten fleissig treülich vn[d] Christlich nach alter, inn Christlicher kirchen gehabter Translation, mit außlegunng etlicher dunckeler ort,vnnd besserung viler verrueckter wort vnd spruech so biß anhere inn andernn kurtz außgangen theutschen Bibeln gespuert vnd gesehen",
+  "Werk": "Bibel",
+  "Erscheinungsort": "Mainz",
+  "Drucker": {
+    "Name": "Peter Jordan",
+    "GndID": "http://d-nb.info/gnd/1037540824"
+  },
+  "Erscheinungsjahr": "1534",
+  "DnbID": "http://d-nb.info/1066769036",
+  "Besitzer": {
+    "Bibliothek": "Martinus-Bibliothek",
+    "Ort": "Mainz",
+    "Signatur": "A/22"
+  }
+}]

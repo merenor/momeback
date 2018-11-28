@@ -1,0 +1,18 @@
+[{
+  "id": 6,
+  "BuchID": "MbBuch00006",
+  "Sprache": "Deutsch",
+  "Titel": "Bibel. Das ist die Heilige Schrifft des Alten und Neuen Testaments",
+  "Werk": "Bibel",
+  "Erscheinungsort": "Mainz",
+  "Drucker": {
+    "Name": "Johann Andreas und Wolfgang Endter",
+    "GndID": "http://d-nb.info/gnd/128893486"
+  },
+  "Erscheinungsjahr": "1662",
+  "Besitzer": {
+    "Bibliothek": "Martinus-Bibliothek",
+    "Ort": "Mainz",
+    "Signatur": "A/63"
+  }
+}]

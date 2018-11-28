@@ -1,5 +1,6 @@
-from rest_framework.serializers import ModelSerializer, PrimaryKeyRelatedField
-from .models import Book, Owner, Printer, Monster, Melody
+from rest_framework.serializers import (ModelSerializer,
+    PrimaryKeyRelatedField, CharField)
+from .models import Book, Owner, Printer, Monster, Melody, Name
 
 
 class PrinterSerializer(ModelSerializer):
@@ -18,12 +19,21 @@ class OwnerSerializer(ModelSerializer):
 
 class BookSerializer(ModelSerializer):
     monsters = PrimaryKeyRelatedField(many=True, read_only=True)
+    printer = PrinterSerializer()
+    owner = OwnerSerializer()
 
     class Meta:
         model = Book
-        fields = ('id', 'book_slug', 'language', 'title', 'work',
+        fields = ('id', 'book_slug', 'language', 'title', 'work', 'volume',
             'place_of_publication', 'year', 'dnb_id', 'printer', 'owner',
             'monsters')
+
+class NameSerializer(ModelSerializer):
+    complete = CharField(source='__str__')
+
+    class Meta:
+        model = Name
+        fields = ('name', 'gender', 'attribute', 'complete')
 
 
 class MelodySerializer(ModelSerializer):
@@ -35,8 +45,11 @@ class MelodySerializer(ModelSerializer):
 
 
 class MonsterSerializer(ModelSerializer):
+    name = NameSerializer()
+    melody = MelodySerializer()
 
     class Meta:
         model = Monster
         fields = ("id", "picture_slug", "file_format", "picture_filename",
-            "description", "bible_passage", "bible_text", "book", "melody",)
+            "description", "bible_passage", "bible_text", "book", "name",
+            "melody",)

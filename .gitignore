@@ -4,3 +4,4 @@ __pycache__
 /static
 /media
 .DS_Store
+db.sqlite3

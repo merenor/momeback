@@ -1,0 +1,20 @@
+[{
+  "id": 3,
+  "BuchID": "MbBuch00003",
+  "Sprache": "Deutsch",
+  "Titel": "Kupfer-Bibel, In welcher Die Physica Sacra, Oder Geheiligte Natur-Wissenschafft Derer In Heil. Schrifft vorkommenden Natürlichen Sachen, Deutlich erklärt und bewährt",
+  "Band": "2",
+  "Werk": "Bibel",
+  "Erscheinungsort": "Augsburg",
+  "Drucker": {
+    "Name": "Johann Andreas Pfeffel",
+    "GndID": "http://d-nb.info/gnd/119200414"
+  },
+  "Erscheinungsjahr": "1731",
+  "DnbID": "http://d-nb.info/1132655013",
+  "Besitzer": {
+    "Bibliothek": "Martinus-Bibliothek",
+    "Ort": "Mainz",
+    "Signatur": "A/573,2"
+  }
+}]

@@ -1,0 +1,20 @@
+[{
+  "id": 1,
+  "BuchID": "MbBuch00001",
+  "Sprache": "Deutsch",
+  "Titel": "Biblia, deutsch",
+  "Werk": "Bibel",
+  "Erscheinungsort": "Nürnberg",
+  "Drucker": {
+    "Name": "Anton Koberger",
+    "GndID": "http://d-nb.info/gnd/118563890"
+  },
+  "Erscheinungsjahr": "1483",
+  "DnbID": "http://d-nb.info/1048164535",
+  "Besitzer": {
+    "Bibliothek": "Martinus-Bibliothek",
+    "Ort": "Mainz",
+    "Signatur": "Inc 100"
+  }
+}
+]

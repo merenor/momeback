@@ -59,9 +59,10 @@ class Book(models.Model):
     """ Bibles """
 
     book_slug = models.CharField(max_length=255, blank=True, null=True)
-    title = models.CharField(max_length=255, blank=True, null=True)
+    title = models.CharField(max_length=400, blank=True, null=True)
     language = models.CharField(max_length=255, blank=True, null=True)
     work = models.CharField(max_length=255, blank=True, null=True)
+    volume = models.CharField(max_length=3, blank=True, null=True)
     place_of_publication = models.CharField(max_length=255, blank=True, null=True)
     year = models.CharField(max_length=4, blank=True, null=True)
     printer = models.ForeignKey(Printer, on_delete=models.CASCADE, blank=True, null=True)
@@ -125,13 +126,29 @@ class Monster(models.Model):
 
         # Generate a random name for this monster
         if not self.name:
-            name_pks = Name.objects.values_list('pk', flat=True)
-            rand_name_pk = choice(list(name_pks))
+            name_pks = list(Name.objects.values_list('pk', flat=True))
+
+            # delete all name_pks that are already used
+            monstername_pks = list(Monster.objects.values_list('name',
+                flat=True))
+            for monstername_pk in monstername_pks:
+                if monstername_pk in name_pks:
+                    name_pks.remove(monstername_pk)
+
+            rand_name_pk = choice(name_pks)
             self.name = Name.objects.get(pk=rand_name_pk)
 
         # generate a custom melody
         if not self.melody:
             melody_pks = Melody.objects.values_list('pk', flat=True)
+
+            # delete all melody_pks that are already used
+            monstermelody_pks = list(Monster.objects.values_list('melody',
+                flat=True))
+            for monstermelody_pk in monstermelody_pks:
+                if monstermelody_pk in melody_pks:
+                    melody_pks.remove(monstermelody_pk)
+
             rand_melody_pk = choice(list(melody_pks))
             self.melody = Melody.objects.get(pk=rand_melody_pk)
 

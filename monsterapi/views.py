@@ -27,7 +27,7 @@ class BookViewSet(NestedViewSetMixin, ModelViewSet):
 
 class MonsterViewSet(NestedViewSetMixin, ModelViewSet):
     serializer_class = MonsterSerializer
-    queryset = Monster.objects.all()
+    queryset = Monster.objects.all().exclude(id=666)
 
 class MelodyViewSet(NestedViewSetMixin, ModelViewSet):
     serializer_class = MelodySerializer
@@ -43,7 +43,7 @@ class GameView(APIView):
 
         # monstrous Easter Egg ;-)
         now = datetime.datetime.now()
-        if now.second in [6, 16, 26, 36, 46, 56]:
+        if now.second in [6, 6*6]:
             rand_monster_pk = EASTER_EGG_PK
         else:
             # Get a random monster data set
@@ -72,7 +72,9 @@ class GameView(APIView):
         data['bible_passage'] = rand_monster.bible_passage
         data['bible_text'] = rand_monster.bible_text
         data['book_title'] = rand_monster.book.title
-        data['name'] = str(rand_monster.name)
+        data['name'] = {
+            'complete': str(rand_monster.name),
+            'simple': rand_monster.name.name }
 
         melodies = [MelodySerializer(rand_monster.melody).data,
             MelodySerializer(other_melodies[0]).data,
@@ -111,20 +113,27 @@ class CheckGame(APIView):
 
     def get(self, request, game_id, melody_id):
         game = Game.objects.filter(id=game_id).first()
-        monster = game.monster if game else None
         melody = Melody.objects.filter(id=melody_id).first()
 
-        if monster and melody:
-            result = (monster.melody == melody)
-        else:
+        if not game.monster:
             result = False
+            message = 'No game.monster found!'
+        if not melody:
+            result = false
+            message += 'No melody found!'
+        else:
+            result = (game.monster.melody == melody)
+            message = 'Ok. Checked {} with [{}] {}.'.format(game.monster.name,
+                melody.id, melody.work_title)
 
-        check = Check(game=game, monster=monster, melody=melody, result=result)
+
+        check = Check(game=game, monster=game.monster, melody=melody,
+            result=result)
         check.save()
-        print("\nGame:", check.game, "\nMonster:", check.monster,
-            "\nMelodie:", check.melody, "\nResult:", check.result)
+        #print("\nGame:", check.game, "\nMonster:", check.monster,
+        #    "\nMelodie:", check.melody, "\nResult:", check.result)
 
-        return Response({'result': result})
+        return Response({'result': result, 'message': message})
 
 def AllMonsters(request):
     monsters = Monster.objects.all()
