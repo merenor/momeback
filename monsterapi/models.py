@@ -140,7 +140,7 @@ class Monster(models.Model):
 
         # generate a custom melody
         if not self.melody:
-            melody_pks = Melody.objects.values_list('pk', flat=True)
+            melody_pks = list(Melody.objects.values_list('pk', flat=True))
 
             # delete all melody_pks that are already used
             monstermelody_pks = list(Monster.objects.values_list('melody',
