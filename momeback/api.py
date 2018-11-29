@@ -1,6 +1,6 @@
 from rest_framework.routers import DefaultRouter
 from monsterapi.views import (PrinterViewSet, BookViewSet, OwnerViewSet,
-    MonsterViewSet, MelodyViewSet, GameViewSet, CheckViewSet)
+    MonsterViewSet, MelodyViewSet, GameViewSet, CheckViewSet, RecipeViewSet)
 from rest_framework_extensions.routers import NestedRouterMixin
 
 class NestedDefaultRouter(NestedRouterMixin, DefaultRouter):
@@ -24,3 +24,4 @@ melodies_router = router.register('melodies', MelodyViewSet)
 owners_router = router.register('owners', OwnerViewSet)
 games_router = router.register('games', GameViewSet)
 checks_router = router.register('checks', CheckViewSet)
+recipes_router = router.register('recipes', RecipeViewSet)

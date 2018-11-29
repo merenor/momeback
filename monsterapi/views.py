@@ -1,6 +1,7 @@
-from .models import Monster, Printer, Owner, Book, Melody, Game, Check
+from .models import Monster, Printer, Owner, Book, Melody, Game, Check, Recipe
 from .serializers import (MonsterSerializer, PrinterSerializer, OwnerSerializer,
-    BookSerializer, MelodySerializer, GameSerializer, CheckSerializer)
+    BookSerializer, MelodySerializer, GameSerializer, CheckSerializer,
+    RecipeSerializer)
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -60,6 +61,13 @@ class CheckViewSet(NestedViewSetMixin, ModelViewSet):
 
     serializer_class = CheckSerializer
     queryset = Check.objects.all()
+
+
+class RecipeViewSet(NestedViewSetMixin, ModelViewSet):
+    http_method_names = ['get']
+
+    serializer_class = RecipeSerializer
+    queryset = Recipe.objects.all()
 
 
 #####
@@ -149,9 +157,12 @@ class CheckMonster(APIView):
 #####
 
 class CheckGame(APIView):
-    """ Check if a certain melody fits to a certain monster.<br />
-        Parameters: int:game_id/int:game_id<br />
-        Results: true or false (this also if there was any error) """
+    """ Check if a certain melody fits a certain monster.<br />
+        Parameters: int:game_id/int:melody_id<br />
+        Results: <strong>result</strong> : true|false<br/>
+        <strong>message</strong> Information if there was an error<br/>
+        <strong>recipe</strong> A random recipe from the cuisine of westphalia if <result>
+        was false and its wikipedia link"""
 
     def get(self, request, game_id, melody_id):
         game = Game.objects.filter(id=game_id).first()
@@ -176,7 +187,19 @@ class CheckGame(APIView):
                 tested_melody=tested_melody, result=result, message=message)
             check.save()
 
-        return Response({'result': result, 'message': message})
+        response = { 'result': result, 'message': message}
+
+        # result false -> append a random recipe from the db
+        if result == False:
+            recipe_pks = list(Recipe.objects.values_list('pk', flat=True))
+            recipe = Recipe.objects.get(pk=choice(recipe_pks))
+
+            response['recipe'] = {
+                'title': recipe.title,
+                'href': recipe.href }
+
+
+        return Response(response)
 
 
 #####

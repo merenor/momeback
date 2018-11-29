@@ -1,6 +1,7 @@
 from rest_framework.serializers import (ModelSerializer,
     PrimaryKeyRelatedField, CharField)
-from .models import Book, Owner, Printer, Monster, Melody, Name, Game, Check
+from .models import (Book, Owner, Printer, Monster, Melody, Name, Game, Check,
+    Recipe)
 
 
 class PrinterSerializer(ModelSerializer):
@@ -71,3 +72,10 @@ class CheckSerializer(ModelSerializer):
     class Meta:
         model = Check
         fields = ("id", "created_date", "game", "tested_melody", "result")
+
+
+class RecipeSerializer(ModelSerializer):
+
+    class Meta:
+        model = Recipe
+        fields = ("id", "title", "href")

@@ -194,3 +194,11 @@ class Check(models.Model):
             mon=self.monster.name if self.monster else "?",
             mel=self.tested_melody.work_title if self.tested_melody else "?",
             res="✓" if self.result else "X")
+
+
+class Recipe(models.Model):
+    title = models.CharField(max_length=255, blank=True, null=True)
+    href = models.URLField(blank=True, null=True)
+
+    def __str__(self):
+        return self.title

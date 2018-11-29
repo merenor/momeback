@@ -1,6 +1,6 @@
 from import_export import resources
 from import_export.fields import Field
-from .models import Book, Printer, Owner, Monster, Name, Melody
+from .models import Book, Printer, Owner, Monster, Name, Melody, Recipe
 from import_export.widgets import ForeignKeyWidget
 
 import json
@@ -102,3 +102,11 @@ class MelodyResource(resources.ModelResource):
 
     class Meta:
         model = Melody
+
+
+class RecipeResource(resources.ModelResource):
+    title = Field(attribute='title', column_name='title')
+    href = Field(attribute='href', column_name='href')
+
+    class Meta:
+        model = Recipe
