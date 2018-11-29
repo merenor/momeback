@@ -185,6 +185,7 @@ class Check(models.Model):
     tested_melody = models.ForeignKey(Melody, on_delete=models.CASCADE, blank=True,
         null=True)
     result = models.BooleanField(default=None)
+    message = models.CharField(max_length=255, blank=True, null=True)
     created_date = models.DateTimeField(default=timezone.now)
 
     def __str__(self):

@@ -66,8 +66,8 @@ class GameSerializer(ModelSerializer):
 
 class CheckSerializer(ModelSerializer):
     game = GameSerializer()
-    melody = MelodySerializer()
+    tested_melody = MelodySerializer()
 
     class Meta:
         model = Check
-        fields = ("id", "created_date", "game", "melody", "result")
+        fields = ("id", "created_date", "game", "tested_melody", "result")

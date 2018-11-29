@@ -42,16 +42,22 @@ class MonsterViewSet(NestedViewSetMixin, ModelViewSet):
 
 
 class MelodyViewSet(NestedViewSetMixin, ModelViewSet):
+    http_method_names = ['get']
+
     serializer_class = MelodySerializer
     queryset = Melody.objects.all()
 
 
 class GameViewSet(NestedViewSetMixin, ModelViewSet):
+    http_method_names = ['get']
+
     serializer_class = GameSerializer
     queryset = Game.objects.all()
 
 
 class CheckViewSet(NestedViewSetMixin, ModelViewSet):
+    http_method_names = ['get']
+
     serializer_class = CheckSerializer
     queryset = Check.objects.all()
 
@@ -156,13 +162,14 @@ class CheckGame(APIView):
         if not game.monster:
             result = False
             message = 'No game.monster found! '
-        if not melody:
+
+        if not tested_melody:
             result = false
             message += 'No melody found!'
+
         else:
             result = (game.monster.melody == tested_melody)
-            message = 'Ok. Checked {} with [{}] {}.'.format(game.monster.name,
-                tested_melody.id, tested_melody.work_title)
+            message = '{}/{} OK'.format(game.monster.id, tested_melody.id)
 
             # save this Check in the db
             check = Check(game=game, monster=game.monster,
@@ -170,6 +177,7 @@ class CheckGame(APIView):
             check.save()
 
         return Response({'result': result, 'message': message})
+
 
 #####
 # Other simple views, just for fun(k) ... ;-)
