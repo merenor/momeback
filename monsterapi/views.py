@@ -1,6 +1,6 @@
 from .models import Monster, Printer, Owner, Book, Melody, Game, Check
 from .serializers import (MonsterSerializer, PrinterSerializer, OwnerSerializer,
-    BookSerializer, MelodySerializer)
+    BookSerializer, MelodySerializer, GameSerializer, CheckSerializer)
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -13,25 +13,52 @@ import json
 from collections import OrderedDict
 import datetime
 
+#####
+# Views for /details/
+#####
+
 class PrinterViewSet(NestedViewSetMixin, ModelViewSet):
     serializer_class = PrinterSerializer
     queryset = Printer.objects.all()
+
 
 class OwnerViewSet(NestedViewSetMixin, ModelViewSet):
     serializer_class = OwnerSerializer
     queryset = Owner.objects.all()
 
+
 class BookViewSet(NestedViewSetMixin, ModelViewSet):
+    http_method_names = ['get']
+
     serializer_class = BookSerializer
     queryset = Book.objects.all()
 
+
 class MonsterViewSet(NestedViewSetMixin, ModelViewSet):
+    http_method_names = ['get']
+
     serializer_class = MonsterSerializer
     queryset = Monster.objects.all().exclude(id=666)
+
 
 class MelodyViewSet(NestedViewSetMixin, ModelViewSet):
     serializer_class = MelodySerializer
     queryset = Melody.objects.all()
+
+
+class GameViewSet(NestedViewSetMixin, ModelViewSet):
+    serializer_class = GameSerializer
+    queryset = Game.objects.all()
+
+
+class CheckViewSet(NestedViewSetMixin, ModelViewSet):
+    serializer_class = CheckSerializer
+    queryset = Check.objects.all()
+
+
+#####
+# THE /game/ function
+#####
 
 class GameView(APIView):
 
@@ -73,8 +100,10 @@ class GameView(APIView):
         data['bible_text'] = rand_monster.bible_text
         data['book_title'] = rand_monster.book.title
         data['name'] = {
-            'complete': str(rand_monster.name),
-            'simple': rand_monster.name.name }
+            'forename': rand_monster.name.forename,
+            'gender': rand_monster.name.gender,
+            'attribute': rand_monster.name.attribute,
+            'complete': str(rand_monster.name) }
 
         melodies = [MelodySerializer(rand_monster.melody).data,
             MelodySerializer(other_melodies[0]).data,
@@ -95,6 +124,10 @@ class GameView(APIView):
 
         return Response(data)
 
+#####
+# DEPRECATED!
+# /checkmonster/
+#####
 
 class CheckMonster(APIView):
     """ Simple check function
@@ -105,6 +138,9 @@ class CheckMonster(APIView):
 
         return Response({ 'result': monster.melody.pk == melody_id })
 
+#####
+# /checkgame/
+#####
 
 class CheckGame(APIView):
     """ Check if a certain melody fits to a certain monster.<br />
@@ -113,27 +149,32 @@ class CheckGame(APIView):
 
     def get(self, request, game_id, melody_id):
         game = Game.objects.filter(id=game_id).first()
-        melody = Melody.objects.filter(id=melody_id).first()
+        tested_melody = Melody.objects.filter(id=melody_id).first()
+
+        message = ''
 
         if not game.monster:
             result = False
-            message = 'No game.monster found!'
+            message = 'No game.monster found! '
         if not melody:
             result = false
             message += 'No melody found!'
         else:
-            result = (game.monster.melody == melody)
+            result = (game.monster.melody == tested_melody)
             message = 'Ok. Checked {} with [{}] {}.'.format(game.monster.name,
-                melody.id, melody.work_title)
+                tested_melody.id, tested_melody.work_title)
 
-
-        check = Check(game=game, monster=game.monster, melody=melody,
-            result=result)
-        check.save()
-        #print("\nGame:", check.game, "\nMonster:", check.monster,
-        #    "\nMelodie:", check.melody, "\nResult:", check.result)
+            # save this Check in the db
+            check = Check(game=game, monster=game.monster,
+                tested_melody=tested_melody, result=result, message=message)
+            check.save()
 
         return Response({'result': result, 'message': message})
+
+#####
+# Other simple views, just for fun(k) ... ;-)
+#####
+
 
 def AllMonsters(request):
     monsters = Monster.objects.all()

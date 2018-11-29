@@ -79,9 +79,9 @@ class Book(models.Model):
 class Name(models.Model):
     """ Names for little monsters """
     class Meta:
-        ordering = ['gender', 'name', 'attribute']
+        ordering = ['gender', 'forename', 'attribute']
 
-    name = models.CharField(max_length=50)
+    forename = models.CharField(max_length=50)
     gender = models.CharField(max_length=3)
     attribute = models.CharField(max_length=50)
 
@@ -92,8 +92,8 @@ class Name(models.Model):
         if not self.attribute.endswith('e'):
             the_attribute += 'e'
 
-        return "{name}, {gender} {attribute}".format(
-            name=self.name,
+        return "{forename}, {gender} {attribute}".format(
+            forename=self.forename,
             gender=self.gender,
             attribute=the_attribute)
 
@@ -182,7 +182,7 @@ class Check(models.Model):
         null=True)
     monster = models.ForeignKey(Monster, on_delete=models.CASCADE, blank=True,
         null=True)
-    melody = models.ForeignKey(Melody, on_delete=models.CASCADE, blank=True,
+    tested_melody = models.ForeignKey(Melody, on_delete=models.CASCADE, blank=True,
         null=True)
     result = models.BooleanField(default=None)
     created_date = models.DateTimeField(default=timezone.now)
@@ -191,5 +191,5 @@ class Check(models.Model):
         return "{:%d.%m.%y, %H:%M:%S} | {mon} + {mel} = {res}".format(
             self.created_date,
             mon=self.monster.name if self.monster else "?",
-            mel=self.melody.work_title if self.melody else "?",
+            mel=self.tested_melody.work_title if self.tested_melody else "?",
             res="✓" if self.result else "X")

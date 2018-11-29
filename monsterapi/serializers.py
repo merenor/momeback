@@ -1,17 +1,15 @@
 from rest_framework.serializers import (ModelSerializer,
     PrimaryKeyRelatedField, CharField)
-from .models import Book, Owner, Printer, Monster, Melody, Name
+from .models import Book, Owner, Printer, Monster, Melody, Name, Game, Check
 
 
 class PrinterSerializer(ModelSerializer):
-
     class Meta:
         model = Printer
         fields = ('id', 'name', 'gnd_id')
 
 
 class OwnerSerializer(ModelSerializer):
-
     class Meta:
         model = Owner
         fields = ('id', 'library', 'location', 'signature')
@@ -33,11 +31,10 @@ class NameSerializer(ModelSerializer):
 
     class Meta:
         model = Name
-        fields = ('name', 'gender', 'attribute', 'complete')
+        fields = ('forename', 'gender', 'attribute', 'complete')
 
 
 class MelodySerializer(ModelSerializer):
-
     class Meta:
         model = Melody
         fields = ('id', 'work_title', 'movement', 'clef', 'keysig',
@@ -53,3 +50,24 @@ class MonsterSerializer(ModelSerializer):
         fields = ("id", "picture_slug", "file_format", "picture_filename",
             "description", "bible_passage", "bible_text", "book", "name",
             "melody",)
+
+
+class GameSerializer(ModelSerializer):
+    monster = MonsterSerializer()
+    melody1 = MelodySerializer()
+    melody2 = MelodySerializer()
+    melody3 = MelodySerializer()
+
+    class Meta:
+        model = Game
+        fields = ("id", "created_date", "monster", "melody1",
+            "melody2", "melody3")
+
+
+class CheckSerializer(ModelSerializer):
+    game = GameSerializer()
+    melody = MelodySerializer()
+
+    class Meta:
+        model = Check
+        fields = ("id", "created_date", "game", "melody", "result")

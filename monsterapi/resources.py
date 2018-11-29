@@ -81,7 +81,7 @@ class MonsterResource(resources.ModelResource):
 
 
 class NameResource(resources.ModelResource):
-    name = Field(attribute='name', column_name='name')
+    forename = Field(attribute='forename', column_name='forename')
     gender = Field(attribute='gender', column_name='gender')
     attribute = Field(attribute='attribute', column_name='attribute')
 
