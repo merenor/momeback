@@ -45,6 +45,7 @@ class MelodySerializer(ModelSerializer):
 class MonsterSerializer(ModelSerializer):
     name = NameSerializer()
     melody = MelodySerializer()
+    book = BookSerializer()
 
     class Meta:
         model = Monster
