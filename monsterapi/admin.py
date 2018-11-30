@@ -5,6 +5,10 @@ from .models import (Book, Printer, Owner, Monster, Name, Melody, Game,
 from .resources import (BookResource, PrinterResource, OwnerResource,
     MonsterResource, NameResource, MelodyResource, RecipeResource)
 
+# in this admin.py, we use the functionality of django-import-import
+# i.e., it shows an "import" button inside the admin, so that we can (quite)
+# easily import json or csv data
+
 @admin.register(Book)
 class BookAdmin(ImportExportModelAdmin):
     resource_class = BookResource

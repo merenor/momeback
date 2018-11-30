@@ -21,14 +21,27 @@ from monsterapi.views import (GameView, CheckMonster, CheckGame, AllMonsters,
     Welcome)
 
 urlpatterns = [
+    # admin, important to look ''behind the scenes'', of course
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+
+    # /detail/, lists datasets i.e. of monsters, melodies, recipes, games, ...
     path('detail/', include(router.urls)),
+
+    # /game/, one of the two most important functions
     path('game/', GameView.as_view()),
+
+    # DEPRECATED
     path('checkmonster/<int:monster_id>/<int:melody_id>/',
         CheckMonster.as_view()),
+
+    # /checkgame/ allows to check a certain game with a given test-melody
     path('checkgame/<int:game_id>/<int:melody_id>/',
         CheckGame.as_view()),
+
+    # just for convenience
     path('view/allmonsters', AllMonsters),
+
+    # what's our home, origin, the idea we come from? Well ...
     path('', Welcome)
 ]

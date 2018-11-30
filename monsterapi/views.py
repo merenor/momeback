@@ -1,11 +1,12 @@
-from .models import Monster, Printer, Owner, Book, Melody, Game, Check, Recipe
+from .models import (Monster, Printer, Owner, Book, Melody, Game, Check,
+    Recipe, Name)
 from .serializers import (MonsterSerializer, PrinterSerializer, OwnerSerializer,
     BookSerializer, MelodySerializer, GameSerializer, CheckSerializer,
-    RecipeSerializer)
+    RecipeSerializer, NameSerializer)
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework_extensions.mixins import NestedViewSetMixin
+#from rest_framework_extensions.mixins import NestedViewSetMixin
 
 from django.shortcuts import render
 
@@ -18,56 +19,72 @@ import datetime
 # Views for /details/
 #####
 
-class PrinterViewSet(NestedViewSetMixin, ModelViewSet):
+class PrinterViewSet(ModelViewSet):
+    http_method_names = ['get']
+
     serializer_class = PrinterSerializer
     queryset = Printer.objects.all()
 
 
-class OwnerViewSet(NestedViewSetMixin, ModelViewSet):
+#NestedViewSetMixin,
+class OwnerViewSet(ModelViewSet):
+    http_method_names = ['get']
+
     serializer_class = OwnerSerializer
     queryset = Owner.objects.all()
 
 
-class BookViewSet(NestedViewSetMixin, ModelViewSet):
+class BookViewSet(ModelViewSet):
     http_method_names = ['get']
 
     serializer_class = BookSerializer
     queryset = Book.objects.all()
 
 
-class MonsterViewSet(NestedViewSetMixin, ModelViewSet):
+class MonsterViewSet(ModelViewSet):
     http_method_names = ['get']
 
     serializer_class = MonsterSerializer
+
+    # exclude that special someone
     queryset = Monster.objects.all().exclude(id=666)
 
 
-class MelodyViewSet(NestedViewSetMixin, ModelViewSet):
+class MelodyViewSet(ModelViewSet):
     http_method_names = ['get']
 
     serializer_class = MelodySerializer
-    queryset = Melody.objects.all()[0:30]
+
+    # just the first 30 entries
+    queryset = Melody.objects.all()[0:29]
 
 
-class GameViewSet(NestedViewSetMixin, ModelViewSet):
+class GameViewSet(ModelViewSet):
     http_method_names = ['get']
 
     serializer_class = GameSerializer
     queryset = Game.objects.all()
 
 
-class CheckViewSet(NestedViewSetMixin, ModelViewSet):
+class CheckViewSet(ModelViewSet):
     http_method_names = ['get']
 
     serializer_class = CheckSerializer
     queryset = Check.objects.all()
 
 
-class RecipeViewSet(NestedViewSetMixin, ModelViewSet):
+class RecipeViewSet(ModelViewSet):
     http_method_names = ['get']
 
     serializer_class = RecipeSerializer
     queryset = Recipe.objects.all()
+
+
+class NameViewSet(ModelViewSet):
+    http_method_names = ['get']
+
+    serializer_class = NameSerializer
+    queryset = Name.objects.all()
 
 
 #####
@@ -77,29 +94,41 @@ class RecipeViewSet(NestedViewSetMixin, ModelViewSet):
 class GameView(APIView):
 
     def get(self, request, format=None):
-        EASTER_EGG_PK = 666
+        """ Gets a dataset containing a random monster and three random
+        melodies. Saves this data as a new 'Game' entry and returns its ID
+        so that it can be checked by the CheckGame function. """
 
-        # dataset for the response
+        ANIMAL = 666
+
+        # dataset for the response - everything should be well ordered
+        # to be readable by humans, too
         data = OrderedDict()
 
-        # monstrous Easter Egg ;-)
+        # STEP A: THE MONSTER
+
+        # Oh my God, it's time for a special someone!
         now = datetime.datetime.now()
         if now.second in [6, 6*6]:
-            rand_monster_pk = EASTER_EGG_PK
+            rand_monster_pk = ANIMAL
         else:
             # Get a random monster data set
+            # 1. get all monster ids as a list
             monster_pks = list(Monster.objects.values_list('pk', flat=True))
-            # remove Easter Egg from list
-            monster_pks.remove(EASTER_EGG_PK)
+            # 2. remove the ANIMAL from the list
+            monster_pks.remove(ANIMAL)
+            # 3. Choose a random monster id
             rand_monster_pk = choice(monster_pks)
 
+        # get the monster by the random id
         rand_monster = Monster.objects.get(pk=rand_monster_pk)
 
-        # Get a list of all melody primary keys
+        # get a list of all melody primary keys
         melody_pks = list(Melody.objects.values_list('pk', flat=True))
 
         # Remove the pk of the selected monster's melody from melody list to avoid duplicity
         melody_pks.remove(rand_monster.melody.pk)
+
+        # STEP B: THE MELODIES
 
         # Get two random sample melodies
         rand_melody_pks = sample(melody_pks, 2)
@@ -123,9 +152,13 @@ class GameView(APIView):
             MelodySerializer(other_melodies[0]).data,
             MelodySerializer(other_melodies[1]).data]
 
+        # the list of three melodies is shuffled, so we do not know
+        # which is the right one
         shuffle(melodies)
 
         data['melodies'] = melodies
+
+        # STEP C: THE GAME
 
         # save this game to database
         game = Game(monster=rand_monster,
@@ -162,24 +195,33 @@ class CheckGame(APIView):
         Results: <strong>result</strong> : true|false<br/>
         <strong>message</strong> Information if there was an error<br/>
         <strong>recipe</strong> A random recipe from the cuisine of westphalia if <result>
-        was false and its wikipedia link"""
+        was false and its wikipedia link."""
 
     def get(self, request, game_id, melody_id):
+
+        # STEP A: Get the Game and the Melody
+
         game = Game.objects.filter(id=game_id).first()
         tested_melody = Melody.objects.filter(id=melody_id).first()
 
         message = ''
 
-        if not game.monster:
+        # maybe this check is done manually, or there is another error
+        # regarding the ids, so we'll report it.
+        if game.monster == None:
             result = False
             message = 'No game.monster found! '
 
-        if not tested_melody:
+        if tested_melody == None:
             result = false
             message += 'No melody found!'
 
+        # STEP B: Test if the Melody matches this Game (that is: if it's the
+        # same Melody that is connected to the Monster within this Game)
+
         else:
             result = (game.monster.melody == tested_melody)
+            # doesn't mean that the melody matches, but the Check is successful
             message = '{}/{} OK'.format(game.monster.id, tested_melody.id)
 
             # save this Check in the db
@@ -187,7 +229,9 @@ class CheckGame(APIView):
                 tested_melody=tested_melody, result=result, message=message)
             check.save()
 
-        response = { 'result': result, 'message': message}
+        response = { 'result': result, 'message': message }
+
+        # STEP C: The recipe
 
         # result false -> append a random recipe from the db
         if result == False:
@@ -197,7 +241,6 @@ class CheckGame(APIView):
             response['recipe'] = {
                 'title': recipe.title,
                 'href': recipe.href }
-
 
         return Response(response)
 
@@ -210,6 +253,7 @@ class CheckGame(APIView):
 def AllMonsters(request):
     monsters = Monster.objects.all()
     return render(request, 'monsters.html', {'monsters': monsters})
+
 
 def Welcome(request):
     return render(request, 'welcome.html')

@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'monsterapi',
     'rest_framework',
     'import_export',
+    # very important to enable cross-platform usage:
     'corsheaders',
 ]
 
@@ -77,6 +78,9 @@ WSGI_APPLICATION = 'momeback.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
+
+# YES, we do use SQLITE3 at the moment, just for convenience ...
+# For the future, perhaps there will be mysql/postgres, at some point
 
 DATABASES = {
     'default': {
@@ -120,6 +124,7 @@ REST_FRAMEWORK = {
 
 LANGUAGE_CODE = 'de-de'
 
+# Should be ''Europe/Mainz''
 TIME_ZONE = 'Europe/Berlin'
 
 USE_I18N = True
@@ -135,8 +140,10 @@ USE_TZ = True
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 
-# The CORS Thing
+# the CORS thing
 CORS_ORIGIN_ALLOW_ALL = True
+
+# haven't been hacked so far, thus ...
 
 #CORS_ORIGIN_WHITELIST = (
 #    'monsterapi.pythonanywhere.com',
