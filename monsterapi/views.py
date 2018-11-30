@@ -46,7 +46,7 @@ class MelodyViewSet(NestedViewSetMixin, ModelViewSet):
     http_method_names = ['get']
 
     serializer_class = MelodySerializer
-    queryset = Melody.objects.all()
+    queryset = Melody.objects.all()[0:30]
 
 
 class GameViewSet(NestedViewSetMixin, ModelViewSet):
