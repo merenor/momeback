@@ -27,6 +27,16 @@ class BookSerializer(ModelSerializer):
             'place_of_publication', 'year', 'dnb_id', 'printer', 'owner',
             'monsters')
 
+
+class SimpleBookSerializer(ModelSerializer):
+    printer = PrinterSerializer()
+    owner = OwnerSerializer()
+
+    class Meta:
+        model = Book
+        fields = ('id', 'book_slug', 'language', 'title', 'work', 'volume',
+            'place_of_publication', 'year', 'dnb_id', 'printer', 'owner')
+
 class NameSerializer(ModelSerializer):
     complete = CharField(source='__str__')
 
@@ -45,7 +55,7 @@ class MelodySerializer(ModelSerializer):
 class MonsterSerializer(ModelSerializer):
     name = NameSerializer()
     melody = MelodySerializer()
-    book = BookSerializer()
+    book = SimpleBookSerializer()
 
     class Meta:
         model = Monster

@@ -18,7 +18,7 @@ from django.urls import path, re_path, include
 #from monsterapi import views as apiviews
 from .api import router
 from monsterapi.views import (GameView, CheckMonster, CheckGame, AllMonsters,
-    Welcome)
+    Welcome, Stat)
 
 urlpatterns = [
     # admin, important to look ''behind the scenes'', of course
@@ -41,6 +41,8 @@ urlpatterns = [
 
     # just for convenience
     path('view/allmonsters', AllMonsters),
+
+    path('stat/<str:model>/<str:startpoint>/<str:endpoint>/', Stat.as_view()),
 
     # what's our home, origin, the idea we come from? Well ...
     path('', Welcome)

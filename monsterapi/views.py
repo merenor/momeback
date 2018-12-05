@@ -6,6 +6,8 @@ from .serializers import (MonsterSerializer, PrinterSerializer, OwnerSerializer,
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework.views import APIView
+
+from django.utils.dateparse import parse_datetime
 #from rest_framework_extensions.mixins import NestedViewSetMixin
 
 from django.shortcuts import render
@@ -63,14 +65,14 @@ class GameViewSet(ModelViewSet):
     http_method_names = ['get']
 
     serializer_class = GameSerializer
-    queryset = Game.objects.all()
+    queryset = Game.objects.all().order_by('-id')[0:19]
 
 
 class CheckViewSet(ModelViewSet):
     http_method_names = ['get']
 
     serializer_class = CheckSerializer
-    queryset = Check.objects.all()
+    queryset = Check.objects.all().order_by('-id')[0:19]
 
 
 class RecipeViewSet(ModelViewSet):
@@ -257,3 +259,31 @@ def AllMonsters(request):
 
 def Welcome(request):
     return render(request, 'welcome.html')
+
+#####
+# /stat/
+#####
+
+class Stat(APIView):
+
+
+    def get(self, request, model, startpoint, endpoint):
+        # parse startpoint
+        start = parse_datetime(startpoint)
+        stop = parse_datetime(endpoint)
+
+        print("start", startpoint, start)
+        print("stop", endpoint, stop)
+        # filter objects
+
+        if model == "checks":
+            data = Check.objects.filter(created_date__range=(start, stop))
+            data_serializer = CheckSerializer(data, many=True)
+        elif model == "games":
+            data = Game.objects.filter(created_date__range=(start, stop))
+            data_serializer = GameSerializer(data, many=True)
+        else:
+            data_serializer = None
+
+        # create REST serializer
+        return Response(data_serializer.data)
