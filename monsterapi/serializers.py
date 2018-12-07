@@ -91,7 +91,7 @@ class StatCheckSerializer(ModelSerializer):
     CheckSerializer that renders all the nested data, too."""
 
     monster_name = SerializerMethodField()
-    monster_picture_link = SerializerMethodField()
+    monster_picture_filename = SerializerMethodField()
     melody1_work_title = SerializerMethodField()
     melody2_work_title = SerializerMethodField()
     melody3_work_title = SerializerMethodField()
