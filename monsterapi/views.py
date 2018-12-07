@@ -2,7 +2,7 @@ from .models import (Monster, Printer, Owner, Book, Melody, Game, Check,
     Recipe, Name)
 from .serializers import (MonsterSerializer, PrinterSerializer, OwnerSerializer,
     BookSerializer, MelodySerializer, GameSerializer, CheckSerializer,
-    RecipeSerializer, NameSerializer)
+    RecipeSerializer, NameSerializer, StatCheckSerializer)
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -278,7 +278,7 @@ class Stat(APIView):
 
         if model == "checks":
             data = Check.objects.filter(created_date__range=(start, stop))
-            data_serializer = CheckSerializer(data, many=True)
+            data_serializer = StatCheckSerializer(data, many=True)
         elif model == "games":
             data = Game.objects.filter(created_date__range=(start, stop))
             data_serializer = GameSerializer(data, many=True)

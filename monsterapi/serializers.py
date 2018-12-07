@@ -1,5 +1,5 @@
 from rest_framework.serializers import (ModelSerializer,
-    PrimaryKeyRelatedField, CharField)
+    PrimaryKeyRelatedField, CharField, SerializerMethodField)
 from .models import (Book, Owner, Printer, Monster, Melody, Name, Game, Check,
     Recipe)
 
@@ -83,6 +83,49 @@ class CheckSerializer(ModelSerializer):
     class Meta:
         model = Check
         fields = ("id", "created_date", "game", "tested_melody", "result")
+
+
+class StatCheckSerializer(ModelSerializer):
+    """This Serializer is implemented for statistical reasons. It provides
+    kind of summarized information about a Check, in contrary of
+    CheckSerializer that renders all the nested data, too."""
+
+    monster_name = SerializerMethodField()
+    monster_picture_link = SerializerMethodField()
+    melody1_work_title = SerializerMethodField()
+    melody2_work_title = SerializerMethodField()
+    melody3_work_title = SerializerMethodField()
+    tested_melody_work_title = SerializerMethodField()
+
+    class Meta:
+        model = Check
+        fields = ('id', 'created_date', 'monster_name',
+        'monster_picture_filename', 'melody1_work_title', 'melody2_work_title',
+        'melody3_work_title', 'tested_melody_work_title', 'result')
+
+    # ''id'' comes from the Check data
+    # ''created_date'' comes from the Check data
+
+    def get_monster_name(self, obj):
+        return str(obj.monster.name)
+
+    def get_monster_picture_filename(self, obj):
+        return obj.monster.picture_filename
+
+    def get_melody1_work_title(self, obj):
+        return obj.game.melody1.work_title
+
+    def get_melody2_work_title(self, obj):
+        return obj.game.melody2.work_title
+
+    def get_melody3_work_title(self, obj):
+        return obj.game.melody3.work_title
+
+    def get_tested_melody_work_title(self, obj):
+        return obj.tested_melody.work_title
+
+    # ''result'' is in the Check data itself
+
 
 
 class RecipeSerializer(ModelSerializer):
